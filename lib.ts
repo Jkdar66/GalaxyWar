@@ -9,12 +9,14 @@ class Node {
             let isDown = false;
             let oldValue = { x: null, y: null };
             _this.addMouseEvent("mousedown", (e: MouseEvent) => {
+                e.preventDefault();
                 isDown = true;
                 var bounds = _this.config.canvas.getBoundingClientRect();
                 oldValue.x = e.clientX - bounds.x;
                 oldValue.y = e.clientY - bounds.y;
             });
             _this.addTouchEvent("touchstart", (e: TouchEvent)=>{
+                e.preventDefault();
                 isDown = true;
                 var bounds = _this.config.canvas.getBoundingClientRect();
                 var touch = e.touches.item(e.touches.length-1);
@@ -22,20 +24,24 @@ class Node {
                 oldValue.y = touch.clientY - bounds.y;
             });
             window.addEventListener("mouseup", (e) => {
+                e.preventDefault();
                 _this.config.moving = false;
                 isDown = false;
             });
             window.addEventListener("touchend", (e) => {
+                e.preventDefault();
                 _this.config.moving = false;
                 isDown = false;
             });
             _this.addMouseEvent("mousemove", (e: MouseEvent) => {
+                e.preventDefault();
                 if (isDown) {
                     move({x: e.clientX, y: e.clientY})
                     callback(e);
                 }
             });
             _this.addTouchEvent("touchmove", (e: TouchEvent)=>{
+                e.preventDefault();
                 if (isDown) {
                     var touch = e.touches.item(e.touches.length-1);
                     move({x: touch.clientX, y: touch.clientY})
