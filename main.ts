@@ -11,6 +11,8 @@ const canvas = document.createElement("canvas");
 const ctx = canvas.getContext("2d");
 document.body.appendChild(canvas);
 
+canvas.requestFullscreen();
+
 canvas.width = config.canvas.w;
 canvas.height = config.canvas.h;
 ctx.save();
