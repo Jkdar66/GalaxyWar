@@ -1,4 +1,4 @@
-import { Rocket, Asteroid, CREATE_ASTEROIDS } from "./lib.js";
+import { GAME } from "./Game.js";
 
 const scaleWidth = 2560, scaleHeight = 1297;
 var config = {
@@ -11,13 +11,11 @@ const canvas = document.createElement("canvas");
 const ctx = canvas.getContext("2d");
 document.body.appendChild(canvas);
 
-canvas.requestFullscreen();
-
 canvas.width = config.canvas.w;
 canvas.height = config.canvas.h;
 ctx.save();
 
-var player: Rocket = new Rocket({
+var player = new GAME.Rocket({
     x: canvas.width/2, 
     y: canvas.height, 
     ctx: ctx, 
@@ -51,7 +49,7 @@ var player: Rocket = new Rocket({
 
 player.drag(()=>{});
 
-var asteroids = CREATE_ASTEROIDS({
+var asteroids = GAME.CREATE_ASTEROIDS({
     list: [],
     canvas: canvas,
     ctx: ctx,

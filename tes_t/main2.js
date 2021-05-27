@@ -1,4 +1,4 @@
-import { Bullet } from "./lib.js";
+import { Bullet } from "../lib.js";
 
 var canvas =document.createElement("canvas");
 document.body.appendChild(canvas);
