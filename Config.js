@@ -1,10 +1,5 @@
 export const BULLET_TYPE = {
-    // BLUE: "images\\LaserBullet\\LaserBlue.png",
-    // GREEN: "images\\LaserBullet\\LaserGreen.png",
-    // PURPLE: "images\\LaserBullet\\LaserPurple.png",
     RED: "images\\laser\\red.png"
-    // SKYBLUE: "images\\LaserBullet\\LaserSkyBlue.png",
-    // YELLOW: "images\\LaserBullet\\LaserYellow.png"
 };
 export const AsteroidSize = [
     {

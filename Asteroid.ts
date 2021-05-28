@@ -4,10 +4,8 @@ import { NodeJS } from "./Node.js";
 export class Asteroid extends NodeJS{
     
     asteroidConfig: AsteroidConfig;
-    ctxConfig: {x: number, y: number};
-    constructor(config: Config, ctxConfig: {x: number, y: number}, astConfig?: AsteroidConfig){
+    constructor(config: Config, astConfig?: AsteroidConfig){
         super(config);
-        this.ctxConfig = ctxConfig;
         this.asteroidConfig = astConfig;
         this.createSprite();
     }
@@ -62,11 +60,9 @@ export class Asteroid extends NodeJS{
                 let scale = cfg.scale;
                 cfg.scaleW = cfg.w * scale;
                 cfg.scaleH = cfg.h * scale;
-                var x = cfg.x + this.ctxConfig.x;
-                var y = cfg.y + this.ctxConfig.y;
                 
                 var img = self.sprite[self.spriteIndex];
-                this.config.ctx.drawImage(img, x, y, cfg.scaleW, cfg.scaleH);
+                this.config.ctx.drawImage(img, cfg.x, cfg.y, cfg.scaleW, cfg.scaleH);
                 this.config.ctx.strokeStyle = "red";
                 // this.config.ctx.strokeRect(x, y, cfg.scaleW, cfg.scaleH);
                 this.config.ctx.fillStyle = "rgb(0,255,0)"
@@ -92,7 +88,7 @@ export class Asteroid extends NodeJS{
 export const CREATE_ASTEROIDS = function(cfg: CreateAsteroid){
     for (let i = cfg.start; i < cfg.end; i++) {
         var ast: Asteroid = new Asteroid({ x: 0, y: 0, ctx: cfg.ctx, canvas: cfg.canvas, scale: cfg.scale }, 
-            cfg.ctxConfig, { path: [], sprite: new Array<HTMLImageElement>(), spriteIndex: 0, loop: 5,
+            { path: [], sprite: new Array<HTMLImageElement>(), spriteIndex: 0, loop: 5,
                 remaining_loop: 5, life: 100, remaining_life: 100 }
         );
 
@@ -108,8 +104,8 @@ export const CREATE_ASTEROIDS = function(cfg: CreateAsteroid){
         }else{
             var node = {x1: x, y1: y, x2: x+w, y2: y+h};
             while(isInArea(node)){
-                ast = new Asteroid({ x: 0, y: 0, ctx: cfg.ctx, canvas: cfg.canvas, scale: cfg.scale }, 
-                cfg.ctxConfig, { path: [], sprite: new Array<HTMLImageElement>(), spriteIndex: 0, loop: 5,
+                ast = new Asteroid({ x: 0, y: 0, ctx: cfg.ctx, canvas: cfg.canvas, scale: cfg.scale },
+                    { path: [], sprite: new Array<HTMLImageElement>(), spriteIndex: 0, loop: 5,
                     remaining_loop: 5, life: 100, remaining_life: 100 }
                 );
                 x = Math.round(cfg.minX + Math.random() * cfg.maxX);

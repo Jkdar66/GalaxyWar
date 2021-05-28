@@ -7,6 +7,7 @@ import { NodeJS } from "./Node.js";
 export class Rocket extends NodeJS {
     img: HTMLImageElement;
     rocketConfig: RocketConfig;
+    private moveByKey: Function;
     constructor(config: Config, rocketConfig?: RocketConfig) {
         super(config);
         this.rocketConfig = rocketConfig;
@@ -21,6 +22,24 @@ export class Rocket extends NodeJS {
             this.draw();
         }
         this.img.src = this.config.imgSrc;
+        this.drag(() => {});
+
+        const _this = this;
+        _this.config.canvas.addEventListener("keydown", (e)=>{
+            console.log(true);
+            e.preventDefault();
+            const value = {x: _this.config.x, y: _this.config.y};
+            switch(e.code){
+                case "ArrowRight":
+                    console.log(true);
+                    
+                    _this.move({x: value.x, y: value.y}, {x: value.x + 1, y: value.y});
+                    break;
+                case "ArrowLeft":
+                    _this.move({x: value.x, y: value.y}, {x: value.x - 1, y: value.y});
+                    break;
+            }
+        });
     }
     draw() {
         const cfg = this.config;

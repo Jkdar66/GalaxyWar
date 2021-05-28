@@ -49,12 +49,7 @@ export interface RocketConfig {
 }
 
 export const BULLET_TYPE = {
-    // BLUE: "images\\LaserBullet\\LaserBlue.png",
-    // GREEN: "images\\LaserBullet\\LaserGreen.png",
-    // PURPLE: "images\\LaserBullet\\LaserPurple.png",
     RED: "images\\laser\\red.png"
-    // SKYBLUE: "images\\LaserBullet\\LaserSkyBlue.png",
-    // YELLOW: "images\\LaserBullet\\LaserYellow.png"
 }
 
 export interface AsteroidConfig{
@@ -109,7 +104,6 @@ export const AsteroidSize = [
 export interface CreateAsteroid{
     canvas: HTMLCanvasElement;
     ctx: CanvasRenderingContext2D;
-    ctxConfig: {x: number, y: number}
     list: Asteroid[];
     start: number;
     end: number;
@@ -119,4 +113,14 @@ export interface CreateAsteroid{
     maxX: number;
     maxY: number;
     update?: Function;
+}
+
+export interface StarConfig{
+    path2d?: Path2D;
+    minX: number;
+    minY: number;
+    maxX: number;
+    maxY: number;
+    minSize: number;
+    maxSize: number;
 }

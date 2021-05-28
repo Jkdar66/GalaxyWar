@@ -7,6 +7,75 @@
     <title>Document</title>
 </head>
 <body>
-    <script type="module" src="main2.js"></script>
+    <!-- <script type="module" src="main2.js"></script> -->
+    <script>
+        var canvas = document.createElement("canvas");
+        document.body.appendChild(canvas);
+        var ctx = canvas.getContext("2d");
+
+        canvas.width = innerWidth-10, canvas.height = 1000;
+        var width = canvas.width, height = canvas.height;
+
+        var minSize = 5, maxSize = 20;
+
+        class Star{
+            constructor(){
+                this.path = new Path2D();
+                this.x = Math.round(Math.random() * width);
+                this.y = Math.round(Math.random() * width);
+                this.ys = 0.25;
+                this.w = Math.round(Math.random() * 7 + 1);
+                this.ws = 50/100*this.w;
+                this.hs = 50/100*this.w;
+                this.maxSize = Math.round(Math.random() * 5);
+                this.remainingSize = this.w;
+
+                this.getPath = function(){
+                    this.path = new Path2D();
+                    this.y += this.ys;
+                    var x = this.x, y = this.y, ws = this.ws, hs = this.hs;
+                    var w = this.w, h = this.w;
+                    this.path.moveTo(x, y);
+                    this.path.lineTo(x + ws, y + h);
+                    this.path.lineTo(x + ws + w, y + h + hs);
+                    this.path.lineTo(x + ws, y + h + hs + hs);
+                    this.path.lineTo(x, y + h + hs + hs + h);
+                    this.path.lineTo(x-ws, y + h + hs + hs);
+                    this.path.lineTo(x-ws-w, y + h + hs);
+                    this.path.lineTo(x-ws, y + h);
+                    this.path.lineTo(x, y);
+                    return this.path;
+                }
+            }
+
+        }
+
+        var stars = [];
+        for (let i = 0; i < 200; i++) {
+            var star = new Star();
+            stars.push(star);
+        }
+        
+        function draw(){
+            ctx.shadowBlur = 10;
+            ctx.shadowColor = "white";
+            ctx.fillStyle = "white";
+            ctx.strokeStyle = "white";
+            for (let i = 0; i < stars.length; i++) {
+                var star = stars[i];
+                ctx.fill(star.getPath());
+            }
+            ctx.fillStyle = "black";
+        }
+
+
+        function update(){
+            requestAnimationFrame(update);
+            ctx.clearRect(0, 0, width, height);
+            ctx.fillRect(0, 0, width, height);
+            draw();
+        }
+        update();
+    </script>
 </body>
 </html>
