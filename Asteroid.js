@@ -1,3 +1,4 @@
+//Test
 import { AsteroidSize } from "./Config.js";
 import { NodeJS } from "./Node.js";
 export class Asteroid extends NodeJS {
