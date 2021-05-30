@@ -1,4 +1,4 @@
-import { Config, MEvent } from "./Config.js";
+import { Config, FlameConfig, FlameType, MEvent } from "./Config.js";
 import { NodeJS } from "./Node.js";
 
 class FlameParticle {
@@ -74,4 +74,14 @@ export class Flame extends NodeJS {
         }
     }
     addMouseEvent<K extends keyof MEvent>(type: K, callback: (e: MouseEvent) => void) { }
+}
+
+export class FlameGif extends NodeJS{
+    flameConfig: FlameConfig;
+    constructor(config: Config, flameType: FlameType){
+        super(config);
+        this.flameConfig = {
+            flameType: flameType
+        }
+    }
 }

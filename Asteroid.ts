@@ -14,13 +14,15 @@ export class Asteroid extends NodeJS{
         var path = this.getPath();
         for (let i = 0; i < 16; i++) {
             var absPath = path;
-            if(i < 10) absPath += "0" + i + ".png";
-            else absPath += i + ".png";
+            if(i < 10) {
+                absPath += "0" + i + ".png";
+            }else {
+                absPath += i + ".png";
+            }
             var img = new Image();
             this.asteroidConfig.path.push(absPath);
             this.asteroidConfig.sprite.push(img);
-            img.onload = function(e){
-            }
+            img.onload = function(e){ }
             img.src = absPath;
         }
         for (let i = 0; i < 16; i++) {
@@ -30,7 +32,6 @@ export class Asteroid extends NodeJS{
             img.onload = function(){
                 self.config.w = img.width;
                 self.config.h = img.height;
-                // self.config.ctx.drawImage(img, self.config.x, self.config.y);
             }
             img.src = path;
         }
@@ -64,13 +65,13 @@ export class Asteroid extends NodeJS{
                 var img = self.sprite[self.spriteIndex];
                 this.config.ctx.drawImage(img, cfg.x, cfg.y, cfg.scaleW, cfg.scaleH);
                 this.config.ctx.strokeStyle = "red";
-                // this.config.ctx.strokeRect(x, y, cfg.scaleW, cfg.scaleH);
                 this.config.ctx.fillStyle = "rgb(0,255,0)"
-                // this.config.ctx.fillRect(x, 
-                //     y + cfg.scaleH - (cfg.scaleH/10), 
-                //     cfg.scaleW/100* self.remaining_life, 
-                //     cfg.scaleH/10
-                // );
+                var loadBounds = {x: cfg.x + cfg.scaleW/4, 
+                    y: cfg.y + (cfg.scaleH - (cfg.scaleH/10)), 
+                    w: cfg.scaleW/2, 
+                    h: cfg.scaleH /10
+                };
+                cfg.ctx.fillRect(loadBounds.x, loadBounds.y, loadBounds.w, loadBounds.h);
                 cfg.y++;
             }
             if(self.remaining_loop == 0){
@@ -140,10 +141,15 @@ export const CREATE_ASTEROIDS = function(cfg: CreateAsteroid){
         return false;
     }
     cfg.update = function(){
-        cfg.list.forEach(elem => {
+        for (let i = 0; i < cfg.list.length; i++) {
+            const elem = cfg.list[i];
             elem.config.scale = cfg.scale;
             elem.update();
-        });
+            if(elem.config.y > elem.config.canvas.height){
+                cfg.list.splice(i, 1);
+                i--;
+            }
+        }
     }
     return cfg;
 }

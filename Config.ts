@@ -124,3 +124,12 @@ export interface StarConfig{
     minSize: number;
     maxSize: number;
 }
+
+export enum FlameType{
+    RED = "images\flame\red\flame_", 
+    BLUE = "images\flame\blueflame_"
+}
+
+export interface FlameConfig{
+    flameType: FlameType;
+}

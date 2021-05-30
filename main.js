@@ -47,7 +47,7 @@ var asteroids = GAME.CREATE_ASTEROIDS({
     ctx: ctx,
     scale: scale,
     minX: 0, maxX: canvas.width, minY: 0, maxY: canvas.height / 3,
-    start: 0, end: 10
+    start: 0, end: 20
 });
 function responsive() {
     config.canvas = { x: 0, y: 0, w: window.innerWidth, h: window.innerHeight };
