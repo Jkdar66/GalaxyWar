@@ -2,7 +2,6 @@ import { NodeJS } from "./Node.js";
 export class BulletImage extends NodeJS {
     constructor(config) {
         super(config);
-        this.drag = function () { };
         this.img = new Image();
         this.img.onload = () => {
             this.config.w = this.config.w || this.img.width;
@@ -23,7 +22,6 @@ export class BulletImage extends NodeJS {
 export class Bullet extends NodeJS {
     constructor(config) {
         super(config);
-        this.drag = function () { };
     }
     draw() {
         const cfg = this.config;

@@ -100,15 +100,6 @@ window.addEventListener("keydown", (e) => {
                 player.pushBullet();
             }
             break;
-        case "ArrowRight":
-            var value = { x: player.config.x, y: player.config.y };
-            console.log(true);
-            player.move({ x: value.x, y: value.y }, { x: value.x + 10, y: value.y });
-            break;
-        case "ArrowLeft":
-            var value = { x: player.config.x, y: player.config.y };
-            player.move({ x: value.x, y: value.y }, { x: value.x - 10, y: value.y });
-            break;
     }
 });
 function getScale() {

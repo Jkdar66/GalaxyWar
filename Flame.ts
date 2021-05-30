@@ -36,7 +36,6 @@ export class Flame extends NodeJS {
     particle: FlameParticle[] = [];
     constructor(config: Config) {
         super(config);
-        this.drag = function () { };
         for (let j = 0; j < 100; j++) {
             var flameParticle = new FlameParticle(this.config.x, this.config.y, this.config.scale);
             this.particle.push(flameParticle);

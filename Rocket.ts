@@ -7,7 +7,9 @@ import { NodeJS } from "./Node.js";
 export class Rocket extends NodeJS {
     img: HTMLImageElement;
     rocketConfig: RocketConfig;
-    private moveByKey: Function;
+    drag: Function;
+    private oldValue: {x: number, y: number};
+    private newValue: {x: number, y: number};
     constructor(config: Config, rocketConfig?: RocketConfig) {
         super(config);
         this.rocketConfig = rocketConfig;
@@ -18,28 +20,117 @@ export class Rocket extends NodeJS {
             this.config.w = this.config.w || this.img.width;
             this.config.h = this.config.h || this.img.height;
             this.config.x -= (this.config.w *this.config.scale) /2;
-            this.config.y -= (this.config.h *this.config.scale) + (this.config.h /2);
+            this.config.y -= (this.config.h *this.config.scale) + 50;
             this.draw();
         }
         this.img.src = this.config.imgSrc;
-        this.drag(() => {});
 
         const _this = this;
-        _this.config.canvas.addEventListener("keydown", (e)=>{
-            console.log(true);
-            e.preventDefault();
-            const value = {x: _this.config.x, y: _this.config.y};
-            switch(e.code){
-                case "ArrowRight":
-                    console.log(true);
-                    
-                    _this.move({x: value.x, y: value.y}, {x: value.x + 1, y: value.y});
-                    break;
-                case "ArrowLeft":
-                    _this.move({x: value.x, y: value.y}, {x: value.x - 1, y: value.y});
-                    break;
+        this.drag = function (callback: (e: MouseEvent | TouchEvent) => void) {
+            let isDown = false;
+            _this.oldValue = { x: null, y: null };
+            _this.newValue = { x: null, y: null };
+            _this.addMouseEvent("mousedown", (e: MouseEvent) => {
+                e.preventDefault();
+                isDown = true;
+                var bounds = _this.config.canvas.getBoundingClientRect();
+                _this.oldValue.x = e.clientX - bounds.x;
+                _this.oldValue.y = e.clientY - bounds.y;
+            });
+            _this.addTouchEvent("touchstart", (e: TouchEvent)=>{
+                e.preventDefault();
+                isDown = true;
+                var bounds = _this.config.canvas.getBoundingClientRect();
+                var touch = e.touches.item(e.touches.length-1);
+                _this.oldValue.x = touch.clientX - bounds.x;
+                _this.oldValue.y = touch.clientY - bounds.y;
+            });
+            window.addEventListener("mouseup", (e) => {
+                e.preventDefault();
+                _this.config.moving = false;
+                isDown = false;
+            });
+            window.addEventListener("touchend", (e) => {
+                e.preventDefault();
+                _this.config.moving = false;
+                isDown = false;
+            });
+            _this.addMouseEvent("mousemove", (e: MouseEvent) => {
+                e.preventDefault();
+                if (isDown) {
+                    var bounds = _this.config.canvas.getBoundingClientRect();
+                    _this.newValue = {
+                        x: e.clientX - bounds.x,
+                        y: e.clientY - bounds.y
+                    }
+                    _this.move(_this.oldValue, _this.newValue);
+                    callback(e);
+                }
+            });
+            _this.addTouchEvent("touchmove", (e: TouchEvent)=>{
+                e.preventDefault();
+                if (isDown) {
+
+                    var touch = e.touches.item(e.touches.length-1);
+                    var bounds = _this.config.canvas.getBoundingClientRect();
+                    _this.newValue = {
+                        x: touch.clientX - bounds.x,
+                        y: touch.clientY - bounds.y
+                    }
+                    _this.move(_this.oldValue, _this.newValue);
+                    callback(e);
+                }
+            });     
+            window.addEventListener("keydown", (e)=>{
+                e.preventDefault();
+                switch(e.code){
+                    case "ArrowRight":
+                        _this.oldValue = {x: _this.config.x, y: _this.config.y};
+                        _this.newValue = {x: _this.config.x + 10, y: _this.config.y};
+                        _this.move(_this.oldValue, _this.newValue)
+                        break;
+                    case "ArrowLeft":
+                        _this.oldValue = {x: _this.config.x, y: _this.config.y};
+                        _this.newValue = {x: _this.config.x - 10, y: _this.config.y};
+                        _this.move(_this.oldValue, _this.newValue)
+                        break;
+                }
+            });
+            return isDown;
+        }
+        this.drag(() => {});
+    }
+
+    move(oldValue: {x: number, y: number}, newValue: {x: number, y: number}){
+        const canvPos = this.config.canvas.getBoundingClientRect();
+        const windowPos = {
+            x1: canvPos.x, 
+            y1: canvPos.y,
+            x2: canvPos.x + canvPos.width,
+            y2: canvPos.y + canvPos.height
+        }
+        const nodePos = {
+            x1: this.config.x, 
+            y1: this.config.y,
+            x2: this.config.x + this.config.scaleW,
+            y2: this.config.y + this.config.scaleH
+        }
+        if(nodePos.x1 >= windowPos.x1 && nodePos.x2 <= windowPos.x2){
+            this.config.moving = true;
+            var x = (this.newValue.x - this.oldValue.x);
+            var y = (this.newValue.y - this.oldValue.y);
+            if(nodePos.x1 + x < windowPos.x1) {
+                this.config.x = 0;
+                return;
             }
-        });
+            if(nodePos.x2 + x > windowPos.x2)  {
+                this.config.x = windowPos.x2 - this.config.scaleW;
+                return;
+            }
+            this.config.x += x;
+            // _this.config.y += y;
+            this.oldValue = this.newValue;
+        }
     }
     draw() {
         const cfg = this.config;

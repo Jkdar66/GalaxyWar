@@ -5,7 +5,6 @@ export class BulletImage extends NodeJS {
     img: HTMLImageElement;
     constructor(config: Config) {
         super(config);
-        this.drag = function () { };
         this.img = new Image();
         this.img.onload = () => {
             this.config.w = this.config.w || this.img.width;
@@ -29,7 +28,6 @@ export class BulletImage extends NodeJS {
 export class Bullet extends NodeJS {
     constructor(config: Config) {
         super(config);
-        this.drag = function () { };
     }
 
     draw() {
