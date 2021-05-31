@@ -47,8 +47,8 @@ var asteroids = GAME.CREATE_ASTEROIDS({
     canvas: canvas,
     ctx: ctx,
     scale: scale,
-    minX: 0, maxX: canvas.width, minY: 0, maxY: canvas.height / 3,
-    start: 0, end: 20
+    minX: 0, maxX: canvas.width, minY: -canvas.height, maxY: canvas.height / 3,
+    start: 0, end: 30
 });
 function responsive() {
     config.canvas = { x: 0, y: 0, w: window.innerWidth, h: window.innerHeight };
@@ -115,4 +115,17 @@ function getScale() {
         scale = (innerWidth / scaleWidth) * 2;
     }
     return scale;
+}
+function bulletColliedAsteroid() {
+    var bullets = player.rocketConfig.bullet;
+    var asteros = asteroids.list;
+    for (let i = 0; i < bullets.length; i++) {
+        const bulletCfg = bullets[i].config;
+        const bulletPos = {
+            x1: bulletCfg.x,
+            y1: bulletCfg.y,
+            x2: bulletCfg.x + bulletCfg.scaleW,
+            y2: bulletCfg.y + bulletCfg.scaleH
+        };
+    }
 }
