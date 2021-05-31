@@ -4,9 +4,9 @@ export class Star {
         this.cfg = config;
         this.cfg.path2d = new Path2D();
         this.values = {
-            x: this.cfg.minX + Math.round(Math.random() * this.cfg.maxX),
-            y: this.cfg.minY + Math.round(Math.random() * this.cfg.maxY),
-            size: this.cfg.minSize + Math.round(Math.random() * this.cfg.maxSize),
+            x: this.cfg.minX //+ Math.round(Math.random() * this.cfg.maxX),
+            ,y: this.cfg.minY //+ Math.round(Math.random() * this.cfg.maxY),
+            ,size: this.cfg.minSize + Math.round(Math.random() * (this.cfg.maxSize - this.cfg.minSize)),
             ys: 0.5,
             radius: 0
         };

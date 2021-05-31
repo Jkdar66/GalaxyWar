@@ -1,6 +1,6 @@
 import { Asteroid } from "./Asteroid.js";
 import { BulletImage } from "./Bullet.js";
-import { Flame } from "./Flame.js";
+import { Flame, FlameGif } from "./Flame.js";
 
 export interface Config {
     x: number;
@@ -21,7 +21,7 @@ export interface RocketConfig {
     bulletData: Array<{ x: number, y: number }>;
     flameData?: Array<{ x: number, y: number }>;
     bullet?: Array<BulletImage>;
-    flame?: Array<Flame>;
+    flame?: Array<FlameGif>;
 }
 
 export interface MEvent {
@@ -45,7 +45,7 @@ export interface RocketConfig {
     bulletData: Array<{ x: number, y: number }>;
     flameData?: Array<{ x: number, y: number }>;
     bullet?: Array<BulletImage>;
-    flame?: Array<Flame>;
+    flame?: Array<FlameGif>;
 }
 
 export const BULLET_TYPE = {
@@ -126,10 +126,14 @@ export interface StarConfig{
 }
 
 export enum FlameType{
-    RED = "images\flame\red\flame_", 
-    BLUE = "images\flame\blueflame_"
+    RED = "images\\flame\\red\\flame_", 
+    BLUE = "images\\flame\\blue\\flame_"
 }
 
 export interface FlameConfig{
     flameType: FlameType;
+    path: string[];
+    sprite: HTMLImageElement[];
+    length: number,
+    index: number
 }

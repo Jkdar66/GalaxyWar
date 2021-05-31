@@ -1,13 +1,13 @@
 import { BulletImage } from "./Bullet.js";
-import { BULLET_TYPE, Config, RocketConfig } from "./Config.js";
-import { Flame } from "./Flame.js";
+import { BULLET_TYPE, Config, FlameType, RocketConfig } from "./Config.js";
+import { FlameGif } from "./Flame.js";
 import { NodeJS } from "./Node.js";
 
 
 export class Rocket extends NodeJS {
     img: HTMLImageElement;
     rocketConfig: RocketConfig;
-    drag: Function;
+    private drag: Function;
     private oldValue: {x: number, y: number};
     private newValue: {x: number, y: number};
     constructor(config: Config, rocketConfig?: RocketConfig) {
@@ -63,7 +63,7 @@ export class Rocket extends NodeJS {
                         x: e.clientX - bounds.x,
                         y: e.clientY - bounds.y
                     }
-                    _this.move(_this.oldValue, _this.newValue);
+                    _this.move();
                     callback(e);
                 }
             });
@@ -77,7 +77,7 @@ export class Rocket extends NodeJS {
                         x: touch.clientX - bounds.x,
                         y: touch.clientY - bounds.y
                     }
-                    _this.move(_this.oldValue, _this.newValue);
+                    _this.move();
                     callback(e);
                 }
             });     
@@ -87,12 +87,12 @@ export class Rocket extends NodeJS {
                     case "ArrowRight":
                         _this.oldValue = {x: _this.config.x, y: _this.config.y};
                         _this.newValue = {x: _this.config.x + 10, y: _this.config.y};
-                        _this.move(_this.oldValue, _this.newValue)
+                        _this.move()
                         break;
                     case "ArrowLeft":
                         _this.oldValue = {x: _this.config.x, y: _this.config.y};
                         _this.newValue = {x: _this.config.x - 10, y: _this.config.y};
-                        _this.move(_this.oldValue, _this.newValue)
+                        _this.move();
                         break;
                 }
             });
@@ -101,7 +101,7 @@ export class Rocket extends NodeJS {
         this.drag(() => {});
     }
 
-    move(oldValue: {x: number, y: number}, newValue: {x: number, y: number}){
+    move(){
         const canvPos = this.config.canvas.getBoundingClientRect();
         const windowPos = {
             x1: canvPos.x, 
@@ -134,17 +134,12 @@ export class Rocket extends NodeJS {
     }
     draw() {
         const cfg = this.config;
-        cfg.ctx.save();
-        let scale = cfg.scale;
-        cfg.scaleW = cfg.w * scale;
-        cfg.scaleH = cfg.h * scale;
-        // cfg.ctx.translate(cfg.x+(cfg.scaleW/2), cfg.y+(cfg.scale/2));
-        // cfg.ctx.rotate(45*Math.PI/180);
+        cfg.scaleW = cfg.w * cfg.scale;
+        cfg.scaleH = cfg.h * cfg.scale;
         cfg.ctx.drawImage(this.img, cfg.x, cfg.y, cfg.scaleW, cfg.scaleH);
-        cfg.ctx.restore();
     }
     pushBullet() {
-        var config = this.rocketConfig;
+        const config = this.rocketConfig;
         for (let i = 0; i < config.bulletData.length; i++) {
             const data = config.bulletData[i];
             var x = this.getX(data.x);
@@ -166,13 +161,15 @@ export class Rocket extends NodeJS {
             let data = config.flameData[i];
             var x = this.getX(data.x);
             var y = this.getY(data.y);
-            config.flame.push(new Flame({
+            config.flame.push(new FlameGif({
                 x: x, 
                 y: y, 
                 canvas: this.config.canvas, 
                 ctx: this.config.ctx, 
                 scale: this.config.scale
-            }));
+            },
+                FlameType.BLUE
+            ));
         }
     }
     drawFlame(){

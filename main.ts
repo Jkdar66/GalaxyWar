@@ -1,3 +1,5 @@
+import { FlameType } from "./Config.js";
+import { FlameGif } from "./Flame.js";
 import { GAME } from "./Game.js";
 
 const scaleWidth = 2560, scaleHeight = 1297;

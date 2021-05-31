@@ -1,6 +1,6 @@
 import { BulletImage } from "./Bullet.js";
-import { BULLET_TYPE } from "./Config.js";
-import { Flame } from "./Flame.js";
+import { BULLET_TYPE, FlameType } from "./Config.js";
+import { FlameGif } from "./Flame.js";
 import { NodeJS } from "./Node.js";
 export class Rocket extends NodeJS {
     constructor(config, rocketConfig) {
@@ -55,7 +55,7 @@ export class Rocket extends NodeJS {
                         x: e.clientX - bounds.x,
                         y: e.clientY - bounds.y
                     };
-                    _this.move(_this.oldValue, _this.newValue);
+                    _this.move();
                     callback(e);
                 }
             });
@@ -68,7 +68,7 @@ export class Rocket extends NodeJS {
                         x: touch.clientX - bounds.x,
                         y: touch.clientY - bounds.y
                     };
-                    _this.move(_this.oldValue, _this.newValue);
+                    _this.move();
                     callback(e);
                 }
             });
@@ -78,12 +78,12 @@ export class Rocket extends NodeJS {
                     case "ArrowRight":
                         _this.oldValue = { x: _this.config.x, y: _this.config.y };
                         _this.newValue = { x: _this.config.x + 10, y: _this.config.y };
-                        _this.move(_this.oldValue, _this.newValue);
+                        _this.move();
                         break;
                     case "ArrowLeft":
                         _this.oldValue = { x: _this.config.x, y: _this.config.y };
                         _this.newValue = { x: _this.config.x - 10, y: _this.config.y };
-                        _this.move(_this.oldValue, _this.newValue);
+                        _this.move();
                         break;
                 }
             });
@@ -91,7 +91,7 @@ export class Rocket extends NodeJS {
         };
         this.drag(() => { });
     }
-    move(oldValue, newValue) {
+    move() {
         const canvPos = this.config.canvas.getBoundingClientRect();
         const windowPos = {
             x1: canvPos.x,
@@ -155,13 +155,13 @@ export class Rocket extends NodeJS {
             let data = config.flameData[i];
             var x = this.getX(data.x);
             var y = this.getY(data.y);
-            config.flame.push(new Flame({
+            config.flame.push(new FlameGif({
                 x: x,
                 y: y,
                 canvas: this.config.canvas,
                 ctx: this.config.ctx,
                 scale: this.config.scale
-            }));
+            }, FlameType.BLUE));
         }
     }
     drawFlame() {

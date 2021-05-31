@@ -4,7 +4,6 @@ document.body.appendChild(canvas);
 var ctx = canvas.getContext("2d");
 canvas.width = 40;
 canvas.height = 150;
-// ctx.globalAlpha = "0"
 ctx.fillRect(0, 0, canvas.width, canvas.height);
 var download = document.getElementById("download");
 

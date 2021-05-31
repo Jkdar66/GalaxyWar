@@ -36,3 +36,8 @@ export const AsteroidSize = [
         imgHeight: 240
     }
 ];
+export var FlameType;
+(function (FlameType) {
+    FlameType["RED"] = "images\\flame\\red\\flame_";
+    FlameType["BLUE"] = "images\\flame\\blue\\flame_";
+})(FlameType || (FlameType = {}));

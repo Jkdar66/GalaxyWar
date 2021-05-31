@@ -1,6 +1,52 @@
 import { Config, FlameConfig, FlameType, MEvent } from "./Config.js";
 import { NodeJS } from "./Node.js";
 
+
+export class FlameGif extends NodeJS{
+    flameConfig: FlameConfig;
+    constructor(config: Config, flameType: FlameType){
+        super(config);
+        this.flameConfig = {
+            flameType: flameType,
+            path: [], 
+            sprite: [],
+            length: 300,
+            index: 0
+        }
+        this.createSprite();
+    }
+
+    createSprite(){
+        var path = this.flameConfig.flameType.toString();
+        for (let i = 0; i < this.flameConfig.length; i++) {
+            var absPath = path;
+            absPath += i + ".png";
+            var img = new Image();
+            this.flameConfig.path.push(absPath);
+            this.flameConfig.sprite.push(img);
+            const self = this;
+            img.onload = function(){
+                self.config.w = img.width;
+                self.config.h = img.height;
+            }
+            img.src = absPath;
+        }
+    }
+
+    draw(){
+        const cfg = this.flameConfig;
+        const img = cfg.sprite[cfg.index];
+        this.config.scaleW = this.config.w *this.config.scale;
+        this.config.scaleH = this.config.h *this.config.scale;
+        var x = this.config.x - (this.config.scaleW/2)
+        this.config.ctx.drawImage(img, x, this.config.y, this.config.scaleW, this.config.scaleH);
+        this.flameConfig.index++;
+        if(this.flameConfig.index == this.flameConfig.length) {
+            this.flameConfig.index = 0;
+        }
+    }
+}
+
 class FlameParticle {
     x: number;
     y: number;
@@ -74,14 +120,4 @@ export class Flame extends NodeJS {
         }
     }
     addMouseEvent<K extends keyof MEvent>(type: K, callback: (e: MouseEvent) => void) { }
-}
-
-export class FlameGif extends NodeJS{
-    flameConfig: FlameConfig;
-    constructor(config: Config, flameType: FlameType){
-        super(config);
-        this.flameConfig = {
-            flameType: flameType
-        }
-    }
 }
