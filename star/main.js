@@ -3,14 +3,15 @@ import { Star } from "../Bacground.js";
 var canvas = document.createElement("canvas");
 document.body.appendChild(canvas);
 var ctx = canvas.getContext("2d");
-canvas.width = 40;
-canvas.height = 150;
+canvas.width = 100;
+canvas.height = 100;
 ctx.fillRect(0, 0, canvas.width, canvas.height);
 
+
 var star = new Star({
-    minX: 15, maxX: 10,
-    minY: 5, maxY: 10,
-    minSize: 20, maxSize: 20
+    minX: 49, maxX: 0,
+    minY: 20, maxY: 10,
+    minSize: 20, maxSize: 10
 });
 
 var zip = new JSZip();
@@ -19,11 +20,22 @@ var img = zip.folder("images");
 
 function draw() {
     ctx.save();
-    ctx.shadowBlur = 20;
-    ctx.shadowColor = "white";
+    ctx.shadowBlur = 15;
+    ctx.shadowColor = "rgb(255, 255, 255)";
     ctx.fillStyle = "white";
-    ctx.strokeStyle = "white";
     ctx.fill(star.getPath());
+    ctx.fill(star.getPath());
+    ctx.fill(star.getPath());
+    ctx.shadowBlur = 5;
+    // ctx.shadowColor = "rgb(255, 180, 0)";
+    // ctx.globalCompositeOperation = "lighter";
+    // ctx.fill(star.getPath());
+    // ctx.fill(star.getPath());
+    // ctx.fill(star.getPath());
+    // ctx.globalCompositeOperation = "source-over";
+    // ctx.fill(star.getPath());
+    // // ctx.fill(star.getPath());
+    // // ctx.fill(star.getPath());
     ctx.restore();
 }
 

@@ -18,7 +18,8 @@ var background = new GAME.Background({
     h: canvas.height,
     canvas: canvas,
     ctx: ctx,
-    scale: scale
+    scale: scale,
+    imgSrc: "images\\star\\starFav2.png"
 }, 300 * scale);
 var player = new GAME.Rocket({
     x: canvas.width / 2,
@@ -26,7 +27,7 @@ var player = new GAME.Rocket({
     ctx: ctx,
     canvas: canvas,
     scale: scale,
-    imgSrc: "images\\mghg-78667c.png"
+    imgSrc: "images\\rocket\\gigant.png"
 }, {
     bulletData: [
         { x: 6.45, y: 21.33 },

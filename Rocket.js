@@ -124,17 +124,12 @@ export class Rocket extends NodeJS {
     }
     draw() {
         const cfg = this.config;
-        cfg.ctx.save();
-        let scale = cfg.scale;
-        cfg.scaleW = cfg.w * scale;
-        cfg.scaleH = cfg.h * scale;
-        // cfg.ctx.translate(cfg.x+(cfg.scaleW/2), cfg.y+(cfg.scale/2));
-        // cfg.ctx.rotate(45*Math.PI/180);
+        cfg.scaleW = cfg.w * cfg.scale;
+        cfg.scaleH = cfg.h * cfg.scale;
         cfg.ctx.drawImage(this.img, cfg.x, cfg.y, cfg.scaleW, cfg.scaleH);
-        cfg.ctx.restore();
     }
     pushBullet() {
-        var config = this.rocketConfig;
+        const config = this.rocketConfig;
         for (let i = 0; i < config.bulletData.length; i++) {
             const data = config.bulletData[i];
             var x = this.getX(data.x);
