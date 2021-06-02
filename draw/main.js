@@ -4,35 +4,6 @@ var ctx = canvas.getContext("2d");
 canvas.width = innerWidth;
 canvas.height = innerHeight;
 
-var x = canvas.width/2;
-var y = canvas.height/2;
-var my = 0;
-var mx = 0;
-var path = new Path2D();
-var msePos = {x: null, y: null};
-
-var velX = 0;
-var velY = 0;
-var speed = 10;
-
-canvas.addEventListener("click", (e)=>{
-    var cvsPos = canvas.getBoundingClientRect();
-    msePos = {x: e.clientX - cvsPos.x, y: e.clientY - cvsPos.y};
-
-    var tx = msePos.x - x;
-    var ty = msePos.y - y;
-    var dist = Math.sqrt(tx * tx + ty * ty);
-
-    if(dist >= speed){
-        velX = (tx / dist) * speed;
-        velY = (ty / dist) * speed;
-    }
-
-    player.fireBullet(velX, velY);
-
-    radius = 10;
-});
-
 class MouseCursor {
     constructor(){
         this.fillStyle = "rgb(255, 0, 0)";
@@ -105,9 +76,11 @@ class Player {
         this.circle = new Circle(this.x, this.y, this.radius, this.fillStyle);
         this.bullet = [];
         this.outerRadius = 300;
+        this.speed = 10;
 
         this.fireBullet = function(velX, velY){
-            var blt = new Bullets(this.x, this.y, velX, velY, {r: 255, g: 0, b: 0}, speed, this);
+            var blt = new Bullets(this.x, this.y, velX, velY, 
+                {r: 255, g: 0, b: 0}, this.speed, this);
             this.bullet.push(blt);
         }
 
@@ -128,18 +101,38 @@ class Player {
             }
             this.circle.draw();
         }
+
+        canvas.addEventListener("click", (e)=>{
+            var cvsPos = canvas.getBoundingClientRect();
+            var msePos = {x: e.clientX - cvsPos.x, y: e.clientY - cvsPos.y};
+        
+            var tx = msePos.x - this.x;
+            var ty = msePos.y - this.y;
+            var dist = Math.sqrt(tx * tx + ty * ty);
+            var velX = 0, velY = 0;
+
+            if(dist >= this.speed){
+                velX = (tx / dist) * this.speed;
+                velY = (ty / dist) * this.speed;
+            }
+        
+            this.fireBullet(velX, velY);
+        });
+        
     }
 }
 
 class Enemy{
-    constructor(x, y, velX, velY, s, radius, fillStyle){
+    constructor(x, y, velX, velY, speed, bltCogig, radius, rgb){
         this.x = x;
         this.y = y;
         this.velX = velX;
         this.velY = velY;
-        this.speed = s;
+        this.speed = speed;
+        this.bltCogig = bltCogig;
         this.radius = radius;
-        this.fillStyle = fillStyle;
+        this.rgb = rgb;
+        this.fillStyle = "rgb(" + this.rgb.r + "," + this.rgb.g + "," + this.rgb.b + ")";
         this.circle = new Circle(this.x, this.y, this.radius, this.fillStyle);
         this.bullets = [];
 
@@ -149,26 +142,26 @@ class Enemy{
             var dist = Math.sqrt(dx * dx + dy * dy);
             var minDist = this.radius + player.outerRadius;
             if(dist < minDist){
+                var blt = new Bullets(this.x, this.y, this.bltCogig.velX, this.bltCogig.velY, 
+                    this.rgb, this.bltCogig.speed, this);
                 if(this.bullets.length == 0){
-                    var blt = new Bullets(this.x, this.y, this.velX, this.velY, 
-                        {r: 255, g: 255, b: 100}, this.speed, this);
                     this.bullets.push(blt);
                 }else {
                     var ind = this.bullets[0].bullets.length - 1;
                     var node = this.bullets[0].bullets[ind];
-                    var r = node.radius;
-                    if(node.x - r < 0 || node.x + r > canvas.width || node.y - r < 0 || node.y + r > canvas.height){
-                        var blt = new Bullets(this.x, this.y, this.velX, this.velY, 
-                            {r: 255, g: 255, b: 100}, this.speed, this);
+                    var r = node.r;
+                    if(node.x - r < 0 || node.x + r > canvas.width || 
+                        node.y - r < 0 || node.y + r > canvas.height){
                         this.bullets.push(blt);
+                        this.bullets.splice(0, 1);
                     }
                 }
             }
         }
 
         this.move = function(){
-            this.x += this.velX/5;
-            this.y += this.velY/5;
+            this.x += this.velX;
+            this.y += this.velY;
         }
 
         this.draw = function(){
@@ -205,7 +198,8 @@ class Enemies{
                 var x = xPos[this.random(0, 1)];
                 var y = yPos[this.random(0, 1)];
 
-                var speed = 10, velX = 0, velY = 0;
+                var speed = 1, velX = 0, velY = 0;
+                var bltSpeed = 10, bltVelX = 0, bltVelY;
 
                 var dx = player.x - x;
                 var dy = player.y - y;
@@ -216,9 +210,17 @@ class Enemies{
                     velY = (dy / dist) * speed;
                 }
 
+                if(dist >= bltSpeed){
+                    bltVelX = (dx / dist) * bltSpeed;
+                    bltVelY = (dy / dist) * bltSpeed;
+                }
+
+                var bltCofig = {velX: bltVelX, velY: bltVelY, speed: bltSpeed};
+
                 var radius = this.random(20, 40);
 
-                var enemy = new Enemy(x, y, velX, velY, speed, radius, "rgb(200, 200, 20)");
+                var rgb = {r: this.random(20, 255), g: this.random(20, 255), b: this.random(20, 255)};
+                var enemy = new Enemy(x, y, velX, velY, speed, bltCofig, radius, rgb);
 
                 if(this.enemies.length == 0){
                     this.enemies.push(enemy);
@@ -237,7 +239,8 @@ class Enemies{
                         x = xPos[this.random(0, 1)];
                         y = yPos[this.random(0, 1)];
         
-                        speed = 10, velX = 0, velY = 0;
+                        speed = 1, velX = 0, velY = 0;
+                        bltSpeed = 10, bltVelX = 0, bltVelY;
 
                         dx = x - player.x;
                         dy = y - player.y;
@@ -247,9 +250,15 @@ class Enemies{
                             velX = (dx / dist) * speed;
                             velY = (dy / dist) * speed;
                         }
-        
+                        if(dist >= bltSpeed){
+                            bltVelX = (dx / dist) * bltSpeed;
+                            bltVelY = (dy / dist) * bltSpeed;
+                        }
+
+                        bltCofig = {velX: bltVelX, velY: bltVelY, speed: bltSpeed};
                         radius = this.random(20, 40);
-                        enemy = new Enemy(x, y, velX, velY, speed, radius, "rgb(200, 200, 20)");
+                        enemy = new Enemy(x, y, velX, velY, speed, bltCofig, radius, rgb);
+
                         node = {x: x, y: y, radius: radius};
                     }
                     this.enemies.push(enemy);
@@ -310,7 +319,7 @@ class Bullets {
             if(i > 0){
                 radius = this.bullets[i-1].r / 1.005;
             }
-            var circ = new Circle(this.x, this.y, radius, color);
+            var circ = new Circle(this.parent.x, this.parent.y, radius, color);
             this.bullets.push(circ);
 
             this.r -= (this.rgb.r/25);
