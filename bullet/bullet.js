@@ -37,7 +37,7 @@ class Sprite{
     constructor(x, y){
         this.x = x;
         this.y = y;
-        this.ys = 1;
+        this.ys = 0.5;
         this.particulars = [];
         this.length = 20;
         this.index = 1;
@@ -59,7 +59,7 @@ class Sprite{
         }
 
         this.move = function(){
-            this.particulars[0].y += this.ys;
+            this.particulars[0].y -= this.ys;
         }
 
         this.draw = function(){
@@ -79,7 +79,7 @@ class Sprite{
                     }
                 }
             }
-            this.move();
+            // this.move(); 
         }
     }
 }
@@ -126,7 +126,7 @@ function getAlpha(a, b, c){
     return Math.acos(result);
 }
 
-var degree = 260;
+var degree = 0;
 function update(){
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     ctx.fillStyle = "black";
