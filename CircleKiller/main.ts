@@ -25,7 +25,7 @@ function init(){
 }
 
 function update() {
-    
+    requestAnimationFrame(update);
 }
 
 function main() {

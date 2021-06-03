@@ -4,6 +4,7 @@ export class Player {
     config: Config;
     constructor(config: Config) {
         this.config = config;
+        
     }
 
     draw() {
